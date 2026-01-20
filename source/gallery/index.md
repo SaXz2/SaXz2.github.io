@@ -322,6 +322,36 @@ let allFolders = [];
 let currentFolder = null;
 let currentImages = [];
 let currentImageIndex = 0;
+let currentToken = ''; // 保存当前使用的 token
+
+// 创建带 token 的图片 URL
+function getAuthenticatedImageUrl(image) {
+  // 使用 GitHub Raw URL 格式，通过 Authorization header 访问
+  // 但由于浏览器限制，我们使用 download_url 并通过 fetch 转换为 blob URL
+  return image.download_url;
+}
+
+// 加载图片并转换为 blob URL（用于私有仓库）
+async function loadImageAsBlob(url, token) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3.raw'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to load image');
+    }
+    
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('Error loading image:', error);
+    return null;
+  }
+}
 
 // 页面加载时检查是否已保存 token
 document.addEventListener('DOMContentLoaded', () => {
@@ -384,6 +414,7 @@ function showError(message) {
 
 // 使用 token 加载相册（扫描所有文件夹）
 async function loadGalleryWithToken(token) {
+  currentToken = token; // 保存 token
   const tokenArea = document.getElementById('token-input-area');
   const loading = document.getElementById('loading');
   const folderSelector = document.getElementById('folder-selector');
@@ -517,7 +548,7 @@ function switchFolder(folder) {
 }
 
 // 渲染图片网格
-function renderGallery() {
+async function renderGallery() {
   const grid = document.getElementById('gallery-grid');
   grid.innerHTML = '';
   
@@ -526,22 +557,32 @@ function renderGallery() {
     return;
   }
   
-  currentImages.forEach((image, index) => {
+  // 为每张图片创建元素并加载
+  for (let index = 0; index < currentImages.length; index++) {
+    const image = currentImages[index];
     const item = document.createElement('div');
     item.className = 'gallery-item';
     
+    // 创建占位符
     item.innerHTML = `
-      <img src="${image.download_url}" alt="${image.name}" loading="lazy">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250'%3E%3Crect fill='%23f0f0f0' width='300' height='250'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23999' font-size='14'%3E加载中...%3C/text%3E%3C/svg%3E" alt="${image.name}" loading="lazy">
       <div class="overlay">
         <p>${image.name}</p>
       </div>
     `;
     
-    // 点击放大
-    item.onclick = () => openLightbox(index);
-    
     grid.appendChild(item);
-  });
+    
+    // 异步加载真实图片
+    loadImageAsBlob(image.download_url, currentToken).then(blobUrl => {
+      if (blobUrl) {
+        const img = item.querySelector('img');
+        img.src = blobUrl;
+        // 点击放大
+        item.onclick = () => openLightbox(index);
+      }
+    });
+  }
 }
 
 // 灯箱功能
@@ -556,9 +597,18 @@ function openLightbox(index) {
   document.addEventListener('keydown', handleLightboxKeyboard);
 }
 
-function showLightboxImage() {
+async function showLightboxImage() {
   const img = document.getElementById('lightbox-img');
-  img.src = currentImages[currentImageIndex].download_url;
+  const image = currentImages[currentImageIndex];
+  
+  // 显示加载状态
+  img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23fff" font-size="14"%3E加载中...%3C/text%3E%3C/svg%3E';
+  
+  // 加载真实图片
+  const blobUrl = await loadImageAsBlob(image.download_url, currentToken);
+  if (blobUrl) {
+    img.src = blobUrl;
+  }
 }
 
 function closeLightbox() {
