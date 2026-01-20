@@ -3,11 +3,11 @@
 
 # 导航栏
 menu:
-  首頁: / || fas fa-home
-  歸檔: /archives/ || fas fa-archive
-  標籤: /tags/ || fas fa-tags
-  分類: /categories/ || fas fa-th
-  相冊: /gallery/ || fas fa-images
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-th
+  相册: /gallery/ || fas fa-images
 
 # 代码块
 highlight_theme: darker
@@ -35,14 +35,14 @@ category_img: orange
 # 首页顶部图高度
 index_top_img_height: 400px
 
-# 主頁副標題
+# 主页副标题
 subtitle:
   enable: true
   effect: true
   typed_option:
   source: false
   sub:
-    - 今日事&#44;今日畢
+    - 今日事&#44;今日毕
     - Never put off till tomorrow what you can do today
 
 # 封面
@@ -110,7 +110,7 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 歡迎來到我的博客
+    description: 欢迎来到我的博客
     button:
       enable: true
       icon: fab fa-github
@@ -118,7 +118,7 @@ aside:
       link: https://github.com/SaXz2
   card_announcement:
     enable: true
-    content: 歡迎來到我的博客！🌸
+    content: 欢迎来到我的博客！🌸
   card_recent_post:
     enable: true
     limit: 5
