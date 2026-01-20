@@ -1,70 +1,48 @@
 # Butterfly 主题配置
 # 文档: https://butterfly.js.org/
 
-# 导航栏设置
-nav:
-  logo: # 网站logo
-  display_title: true
-  fixed: false # 固定导航栏
-
+# 导航栏
 menu:
   首页: / || fas fa-home
   归档: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-th
-  # 友链: /link/ || fas fa-link
-  # 关于: /about/ || fas fa-heart
 
-# 代码块设置
-highlight_theme: mac light # darker / pale night / light / ocean / mac / mac light / false
-highlight_copy: true # 复制按钮
-highlight_lang: true # 显示语言
-highlight_shrink: false # 代码块默认展开
-highlight_height_limit: false # 代码高度限制
-
-code_word_wrap: false
+# 代码块
+highlight_theme: mac
+highlight_copy: true
+highlight_lang: true
+highlight_shrink: false
 
 # 社交链接
 social:
-  fab fa-github: https://github.com/SaXz2 || Github || '#24292e'
-  # fas fa-envelope: mailto:xxx@gmail.com || Email || '#4a7dbe'
+  fab fa-github: https://github.com/SaXz2 || Github
 
 # 头像
 avatar:
   img: https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png
-  effect: false # 头像会一直转圈
+  effect: false
 
-# 禁用所有横幅图片
-disable_top_img: false
-
-# 主页顶部图
+# 顶部图
 index_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-
-# 归档页顶部图
 archive_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-
-# 标签页顶部图
 tag_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-
-# 分类页顶部图
 category_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
 
+# 封面
 cover:
-  # 是否显示文章封面
   index_enable: true
   aside_enable: true
   archives_enable: true
-  # 封面显示位置
-  position: both # left/right/both
-  # 默认封面
+  position: both
   default_cover:
     - https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
 
-# 文章页相关配置
+# 文章元信息
 post_meta:
   page:
-    date_type: both # created or updated or both
-    date_format: relative # relative or date
+    date_type: both
+    date_format: relative
     categories: true
     tags: true
     label: true
@@ -82,41 +60,20 @@ wordcount:
   min2read: true
   total_wordcount: true
 
-# 文章页底部相关文章推荐
+# 相关文章
 related_post:
   enable: true
   limit: 6
   date_type: created
 
-# 文章锚点
-anchor:
-  button:
-    enable: false
-    always_show: false
-    icon: # 图标
-  auto_update: false # 自动更新锚点
-
 # 文章版权
 post_copyright:
   enable: true
   decode: false
-  author_href:
   license: CC BY-NC-SA 4.0
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-# 打赏
-reward:
-  enable: false
-  text:
-  QR_code:
-    # - img: /img/wechat.jpg
-    #   link:
-    #   text: 微信
-    # - img: /img/alipay.jpg
-    #   link:
-    #   text: 支付宝
-
-# TOC 目录
+# 目录
 toc:
   post: true
   page: false
@@ -125,11 +82,7 @@ toc:
   style_simple: false
   scroll_percent: true
 
-post_pagination:
-  enable: true
-  type: 1 # 1: 下一篇 上一篇 | 2: 旧文章 新文章
-
-# 侧边栏设置
+# 侧边栏
 aside:
   enable: true
   hide: false
@@ -142,7 +95,7 @@ aside:
     category: true
   card_author:
     enable: true
-    description:
+    description: 欢迎来到我的博客
     button:
       enable: true
       icon: fab fa-github
@@ -158,26 +111,18 @@ aside:
   card_categories:
     enable: true
     limit: 8
-    expand: none
   card_tags:
     enable: true
     limit: 40
     color: false
-    orderby: random
-    order: 1
-    sort_order:
   card_archives:
     enable: true
     type: monthly
     format: MMMM YYYY
     order: -1
     limit: 8
-    sort_order:
   card_webinfo:
     enable: true
-    post_count: true
-    last_push_date: true
-    sort_order:
 
 # 访客统计
 busuanzi:
@@ -185,12 +130,11 @@ busuanzi:
   site_pv: true
   page_pv: true
 
-# 页脚设置
+# 页脚
 footer:
   owner:
     enable: true
     since: 2026
-  custom_text:
   copyright: true
 
 # 右下角按钮
@@ -198,10 +142,6 @@ rightside:
   enable: true
   hide: false
   show_percent: true
-
-# 简繁转换
-translate:
-  enable: false
 
 # 夜间模式
 darkmode:
@@ -212,150 +152,27 @@ darkmode:
 # 阅读模式
 readmode: true
 
-# 侧边栏自动隐藏
-autoDarkmode:
-  enable: false
-
 # 图片懒加载
 lazyload:
   enable: true
   field: site
-  placeholder:
-  blur: false
-
-# instantpage
-instantpage: false
-
-# Pjax
-pjax:
-  enable: false
-  exclude:
-
-# Snackbar 弹窗
-snackbar:
-  enable: false
-  position: bottom-left
-  bg_light: '#49b1f5'
-  bg_dark: '#1f1f1f'
-
-# PWA
-pwa:
-  enable: false
-
-# Open graph meta
-Open_Graph_meta:
-  enable: true
-
-# 数学公式
-mathjax:
-  enable: false
-
-katex:
-  enable: false
 
 # 搜索
 local_search:
   enable: true
   preload: false
-  CDN:
 
-# 评论系统
+# 评论
 comments:
-  use: # Disqus,Disqusjs,Livere,Gitalk,Valine,Waline,Utterances,Facebook Comments,Twikoo,Giscus,Remark42,Artalk
+  use:
   text: true
   lazyload: false
   count: false
-  card_post_count: false
 
-# 美化/特效
+# 美化
 beautify:
-  enable: false
+  enable: true
   field: post
-  title-prefix-icon:
-  title-prefix-icon-color:
-
-# 全局字体
-font:
-  global-font-size:
-  code-font-size:
-  font-family:
-  code-font-family:
-
-# 网站背景
-background:
-
-# footer 背景
-footer_bg: false
-
-# 打字效果
-subtitle:
-  enable: false
-
-# 加载动画
-preloader:
-  enable: false
-
-# 网站标题前缀
-titlePrefix:
-  enable: false
-
-# 404页面
-error_404:
-  enable: false
-
-# 音乐播放器
-aplayerInject:
-  enable: false
-
-# 鼠标点击效果
-fireworks:
-  enable: false
-
-# 点击出现爱心
-click_heart:
-  enable: false
-
-# 鼠标点击文字
-ClickShowText:
-  enable: false
-
-# 网页标题变化
-title_change:
-  enable: false
-
-# 樱花飘落效果
-sakura:
-  enable: true
-  color: pink # pink / white / red / blue / yellow / orange / purple / green
-
-# 彩带背景
-canvas_ribbon:
-  enable: false
-
-# 静止彩带
-canvas_ribbon_piao:
-  enable: false
-
-# 动态彩带
-canvas_nest:
-  enable: false
-
-# 鼠标跟随线条
-canvas_fluttering_ribbon:
-  enable: false
-
-# 鼠标跟随烟花
-fireworks_canvas:
-  enable: false
-
-# 点击烟花
-click_show_text:
-  enable: false
-
-# 页面美化
-beautify:
-  enable: true
-  field: post # site/post
   title-prefix-icon: '\f0c1'
   title-prefix-icon-color: '#F47466'
 
@@ -375,53 +192,10 @@ theme_color:
   blockquote_padding_color: '#49b1f5'
   blockquote_background_color: '#49b1f5'
   scrollbar_color: '#49b1f5'
-  meta_theme_color_light: 'ffffff'
-  meta_theme_color_dark: '#0d0d0d'
 
-# 其他
-disable_baidu_transformation: true
-
-# 谷歌分析
-google_analytics:
-
-# 百度统计
-baidu_analytics:
-
-# Cloudflare 分析
-cloudflare_analytics:
-
-# Microsoft Clarity
-microsoft_clarity:
-
-# 广告
-google_adsense:
-  enable: false
-
-# 网站验证
-site_verification:
-
-# 美化/特效
-beautify:
-  enable: true
-  field: post
-  title-prefix-icon: '\f863'
-  title-prefix-icon-color: '#F47466'
-
-# 侧边栏排序
-aside_sort_order:
-  card_author: 0
-  card_announcement: 1
-  card_recent_post: 2
-  card_categories: 3
-  card_tags: 4
-  card_archives: 5
-  card_webinfo: 6
-
-# 注入代码
+# 注入代码（樱花特效）
 inject:
   head:
-    # 樱花飘落效果CSS
     - <style>.sakura{pointer-events:none;position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:9999}</style>
   bottom:
-    # 樱花飘落效果JS
     - <script>!function(){function e(){const e=document.createElement("div");e.className="sakura",e.style.left=100*Math.random()+"%",e.style.animationDuration=10+20*Math.random()+"s",e.style.animationDelay=5*Math.random()+"s",e.innerHTML='<svg viewBox="0 0 40 40" width="40" height="40"><path d="M20,2 Q25,10 20,18 Q15,10 20,2 M20,22 Q25,30 20,38 Q15,30 20,22 M2,20 Q10,15 18,20 Q10,25 2,20 M22,20 Q30,15 38,20 Q30,25 22,20" fill="pink" opacity="0.6"/></svg>',document.body.appendChild(e),setTimeout(()=>e.remove(),3e4)}setInterval(e,300)}();</script>
