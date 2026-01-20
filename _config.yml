@@ -1,0 +1,22 @@
+# 网站基本信息
+title: 我的博客
+description: 用虎鲸笔记写博客
+author: SaXz2
+url: https://SaXz2.github.io
+baseurl: ""
+
+# Jekyll 设置
+markdown: kramdown
+permalink: /:title/
+timezone: Asia/Shanghai
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# 排除文件
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
