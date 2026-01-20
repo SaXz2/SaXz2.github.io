@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>250525 基于摄像机的遮挡与可变点缩放效果 Epi.13 | 我的博客</title><meta name="author" content="SaXz2"><meta name="copyright" content="SaXz2"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="250525 基于摄像机的遮挡与可变点缩放效果 Epi.13 有啥用？ **遮挡（Occlusion）： **避免 “穿帮”，比如烟雾粒子重叠时，后面的粒子被前面的挡住，符合真实视觉。 点缩放（pscale）：远处的鸟看起来小，近处的鸟看起来大。 剔除摄像机外的内容  参考这个就行了，作者是用UVtexture 计算的屏幕UV，原理一样 计算中心点 使用 fromNDC 计算出屏幕中心点 利用中心">
+<meta property="og:type" content="article">
+<meta property="og:title" content="250525 基于摄像机的遮挡与可变点缩放效果 Epi.13">
+<meta property="og:url" content="https://saxz2.github.io/20260121021205/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="250525 基于摄像机的遮挡与可变点缩放效果 Epi.13 有啥用？ **遮挡（Occlusion）： **避免 “穿帮”，比如烟雾粒子重叠时，后面的粒子被前面的挡住，符合真实视觉。 点缩放（pscale）：远处的鸟看起来小，近处的鸟看起来大。 剔除摄像机外的内容  参考这个就行了，作者是用UVtexture 计算的屏幕UV，原理一样 计算中心点 使用 fromNDC 计算出屏幕中心点 利用中心">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2026-01-20T18:12:05.000Z">
+<meta property="article:modified_time" content="2026-01-20T18:12:05.000Z">
+<meta property="article:author" content="SaXz2">
+<meta property="article:tag" content="Note">
+<meta property="article:tag" content="Block">
+<meta property="article:tag" content="CG相机技巧">
+<meta property="article:tag" content="Houdini技巧">
+<meta property="article:tag" content="POP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "250525 基于摄像机的遮挡与可变点缩放效果 Epi.13",
+  "url": "https://saxz2.github.io/20260121021205/",
+  "image": "https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png",
+  "datePublished": "2026-01-20T18:12:05.000Z",
+  "dateModified": "2026-01-20T18:12:05.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "SaXz2",
+      "url": "https://saxz2.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://saxz2.github.io/20260121021205/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '250525 基于摄像机的遮挡与可变点缩放效果 Epi.13',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><style>.canvas-nest{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}</style><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-th"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">我的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">250525 基于摄像机的遮挡与可变点缩放效果 Epi.13</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-th"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">250525 基于摄像机的遮挡与可变点缩放效果 Epi.13</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-20T18:12:05.000Z" title="发表于 2026-01-21 02:12:05">2026-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-20T18:12:05.000Z" title="更新于 2026-01-21 02:12:05">2026-01-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">800</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>250525 基于摄像机的遮挡与可变点缩放效果 Epi.13</p>
+<p>有啥用？</p>
+<p>**遮挡（Occlusion）： **避免 “穿帮”，比如烟雾粒子重叠时，后面的粒子被前面的挡住，符合真实视觉。</p>
+<p><strong>点缩放（pscale）：</strong>远处的鸟看起来小，近处的鸟看起来大。</p>
+<p>剔除摄像机外的内容</p>
+<p> 参考这个就行了，作者是用UVtexture 计算的屏幕UV，原理一样</p>
+<p>计算中心点 使用 fromNDC 计算出屏幕中心点</p>
+<p>利用中心点计算出指向屏幕的法线方向</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vector p0 = <span class="title function_">fromNDC</span>(cam,<span class="title function_">set</span>(<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0</span>)); </span><br><span class="line"><span class="comment">// fromNDC函数：将标准化设备坐标（NDC，范围0-1）转换为相机空间坐标</span></span><br><span class="line"><span class="comment">// set(0.5,0.5,0)：NDC坐标的中心（画面正中间），z=0代表相机平面（近裁剪面）</span></span><br><span class="line"><span class="comment">// 类比：p0是相机平面的中心点，相当于“镜头正中央的位置”</span></span><br><span class="line"></span><br><span class="line">vector p1 = <span class="title function_">fromNDC</span>(cam,<span class="title function_">set</span>(<span class="number">0.5</span>,<span class="number">0.5</span>,-<span class="number">0.0001</span>)); </span><br><span class="line"><span class="comment">// z=-0.0001：在相机前方极近的位置（稍微偏离相机平面一点点）</span></span><br><span class="line"><span class="comment">// 类比：p1是相机镜头前方一点点的位置，和p0形成一个极短的线段</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 计算相机平面的法线方向n（从相机平面指向外侧）</span></span><br><span class="line">vector n = <span class="title function_">normalize</span>(p1-p0); </span><br><span class="line"><span class="comment">// p1-p0：向量方向从p0到p1（即从相机平面指向相机前方）</span></span><br><span class="line"><span class="comment">// normalize：标准化向量，使其长度为1</span></span><br><span class="line"><span class="comment">// 类比：n是相机平面的“朝向”，就像相机镜头的“视线方向”</span></span><br></pre></td></tr></table></figure>
+
+<p>计算出所有点到屏幕中心的偏移量</p>
+<p>使用点乘计算出投影距离也就是长度</p>
+<p>再用这个长度值 * 当前点位置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vector q = <span class="title function_">dot</span> (p0 - @P , n) * n; </span><br><span class="line"><span class="comment">// p0 - @P：向量从当前点@P指向相机平面中心点p0</span></span><br><span class="line"><span class="comment">// dot(..., n)：计算该向量在法线n方向上的投影长度（带正负号）</span></span><br><span class="line"><span class="comment">// 再乘以n：将投影长度转换为向量形式，得到点@P到相机平面的垂直距离向量</span></span><br><span class="line"><span class="comment">// 类比：q是当前点到相机平面的“垂直距离箭头”，箭头长度就是距离，方向是相机法线n</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. 存储距离值到@dist属性</span></span><br><span class="line">@dist = <span class="title function_">length</span>(q); </span><br><span class="line"><span class="comment">// 取q的长度，得到点到相机平面的实际距离（无方向的数值）</span></span><br><span class="line"><span class="comment">// 类比：@dist记录“当前点离相机平面有多远”</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 6. 存储投影后的点位置到v@Q属性</span></span><br><span class="line">v@Q = @P + q; </span><br><span class="line"><span class="comment">// @P + q：将当前点沿法线n方向移动到相机平面上，得到投影点Q</span></span><br><span class="line"><span class="comment">// 类比：v@Q是当前点在相机画面中的“投影位置”，就像把点“拍扁”到相机平面上</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 7. 存储法线方向到@N属性</span></span><br><span class="line">@N = n; </span><br><span class="line"><span class="comment">// 记录相机平面的法线方向，后续可能用于遮挡计算或光照计算</span></span><br><span class="line"><span class="comment">// 类比：@N记住“相机镜头的朝向”，方便后续判断前后遮挡</span></span><br></pre></td></tr></table></figure>
+
+<p>使用摄像机剔除遮挡点</p>
+<p>使用pcfind_radius 找到所有重叠点</p>
+<p>循环数组得到所有重叠点到相机的距离的数组</p>
+<p>再用 <code>pts = reorder ( pts, argsort ( dist ) );</code> 重新排序 按照到相机距离从小到大的顺序排列</p>
+<p>最后再删除数组索引0以外的就行了</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://saxz2.github.io">SaXz2</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://saxz2.github.io/20260121021205/">https://saxz2.github.io/20260121021205/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://saxz2.github.io" target="_blank">我的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Note/">Note</a><a class="post-meta__tags" href="/tags/Block/">Block</a><a class="post-meta__tags" href="/tags/CG%E7%9B%B8%E6%9C%BA%E6%8A%80%E5%B7%A7/">CG相机技巧</a><a class="post-meta__tags" href="/tags/Houdini%E6%8A%80%E5%B7%A7/">Houdini技巧</a><a class="post-meta__tags" href="/tags/POP/">POP</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/20260121022450/" title="Kiro IDE + OpenSpec 实战：利用Spec以及多Ai工具降低抽卡概率"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Kiro IDE + OpenSpec 实战：利用Spec以及多Ai工具降低抽卡概率</div></div><div class="info-2"><div class="info-item-1">Kiro IDE + OpenSpec 实战：利用Spec以及多Ai工具降低抽卡概率  引言在上一期内容中，我们安装了 Roo Code、CLINE 和 Kilo Code 等 AI 插件，但如何将这些工具深度嵌入开发工作流？本期将以 Kiro IDE 为核心，实战演示如何配置并协同这些工具，高效开发一个“全局记忆”功能。 为什么选择 Kiro IDE？  极致性价比：目前 Kiro 账号额度极高（约 1 元换取 550 次调用），相当于拥有近乎无限使用的 Claude 4.5 Opus  上下文无感切换：切换账号后不会像 Cursor 那样清除上下文，配合切号器可实现丝滑续航。   一、 环境配置与工具协同1. 规范化 Spec 管理Kiro 目前暂不支持 OpenSpec ，其自带的 Spec 存储在 .kiro 文件夹中。  痛点：Kiro 的 Spec 缺少归档功能，且在处理简易任务时流程略显臃肿。  解决方案：   2. 插件配置（Roo Code &#x2F; CLINE &#x2F; Kilo Code）三者配置大同小异，核心参数如下（就上期的反代）：  **API...</div></div></div></a><a class="pagination-related" href="/20260121020153/" title="260120 Git Submodule 是什么？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">260120 Git Submodule 是什么？</div></div><div class="info-2"><div class="info-item-1">260120 Git Submodule 是什么？ Git 子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。这样你可以： 将另一个项目（比如模板、库）嵌入到你的项目中 保持子项目独立的版本控制 在主项目中引用子项目的特定版本 </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/20260121020153/" title="260120 Git Submodule 是什么？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-21</div><div class="info-item-2">260120 Git Submodule 是什么？</div></div><div class="info-2"><div class="info-item-1">260120 Git Submodule 是什么？ Git 子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。这样你可以： 将另一个项目（比如模板、库）嵌入到你的项目中 保持子项目独立的版本控制 在主项目中引用子项目的特定版本 </div></div></div></a><a class="pagination-related" href="/20260121023135/" title="去人格化提示词：用“模拟器思维”提升大模型输出质量"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-21</div><div class="info-item-2">去人格化提示词：用“模拟器思维”提升大模型输出质量</div></div><div class="info-2"><div class="info-item-1">去人格化提示词：用“模拟器思维”提升大模型输出质量  不要把大模型当“人”，避免使用“你”“我”等人称 使用“你怎么看”会触发默认助手人格，输出安全但浅层、模板化内容 大模型本质是概率模拟器，不是有主观意识的主体 通过明确场景与角色（专家、团队、反方）可显著提升输出质量 避免表达个人立场以减少迎合偏差，促使模型给出更客观推演 </div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">SaXz2</div><div class="author-info-description">欢迎来到我的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/SaXz2"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SaXz2" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！🌸</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121024435/" title="一个男生怎么做才能脱离现在的阶级（除了通过结婚以外）? - 知乎">一个男生怎么做才能脱离现在的阶级（除了通过结婚以外）? - 知乎</a><time datetime="2026-01-20T18:44:35.000Z" title="发表于 2026-01-21 02:44:35">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121023204/" title="JSON 修图法">JSON 修图法</a><time datetime="2026-01-20T18:32:04.000Z" title="发表于 2026-01-21 02:32:04">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121023135/" title="去人格化提示词：用“模拟器思维”提升大模型输出质量">去人格化提示词：用“模拟器思维”提升大模型输出质量</a><time datetime="2026-01-20T18:31:35.000Z" title="发表于 2026-01-21 02:31:35">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121022450/" title="Kiro IDE + OpenSpec 实战：利用Spec以及多Ai工具降低抽卡概率">Kiro IDE + OpenSpec 实战：利用Spec以及多Ai工具降低抽卡概率</a><time datetime="2026-01-20T18:24:50.000Z" title="发表于 2026-01-21 02:24:50">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121021205/" title="250525 基于摄像机的遮挡与可变点缩放效果 Epi.13">250525 基于摄像机的遮挡与可变点缩放效果 Epi.13</a><time datetime="2026-01-20T18:12:05.000Z" title="发表于 2026-01-21 02:12:05">2026-01-21</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By SaXz2</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://your-waline-url.vercel.app',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.8.0/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client@3.8.0/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !true) {
+    if (true) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@2.0.4/dist/canvas-nest.umd.js"></script><script>new CanvasNest(document.body,{color:'255,182,193',opacity:0.7,count:99,zIndex:-1});</script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/third-party/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
