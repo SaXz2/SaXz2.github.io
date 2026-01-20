@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Karma 渲染中的 Light Path Expressions (LPE) 系统学习 | 我的博客</title><meta name="author" content="SaXz2"><meta name="copyright" content="SaXz2"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Karma 渲染中的 Light Path Expressions (LPE) 系统学习1. 这是什么？简单说，LPE（Light Path Expressions，光线路径表达式） 是一种声明式语法，让你能像写公式一样，精确指定你要渲染的“那部分光”。  为什么需要它？ 默认渲染输出（比如 C，代表 Beauty）是所有光线路径贡献的总和。LPE 允许你“拆开”这个总和，单独提取特定类型的光线交">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Karma 渲染中的 Light Path Expressions (LPE) 系统学习">
+<meta property="og:url" content="https://saxz2.github.io/20260121003030/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="Karma 渲染中的 Light Path Expressions (LPE) 系统学习1. 这是什么？简单说，LPE（Light Path Expressions，光线路径表达式） 是一种声明式语法，让你能像写公式一样，精确指定你要渲染的“那部分光”。  为什么需要它？ 默认渲染输出（比如 C，代表 Beauty）是所有光线路径贡献的总和。LPE 允许你“拆开”这个总和，单独提取特定类型的光线交">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2026-01-20T16:30:30.000Z">
+<meta property="article:modified_time" content="2026-01-20T16:30:30.000Z">
+<meta property="article:author" content="SaXz2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Karma 渲染中的 Light Path Expressions (LPE) 系统学习",
+  "url": "https://saxz2.github.io/20260121003030/",
+  "image": "https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png",
+  "datePublished": "2026-01-20T16:30:30.000Z",
+  "dateModified": "2026-01-20T16:30:30.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "SaXz2",
+      "url": "https://saxz2.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://saxz2.github.io/20260121003030/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Karma 渲染中的 Light Path Expressions (LPE) 系统学习',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><style>.canvas-nest{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}</style><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-th"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">我的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Karma 渲染中的 Light Path Expressions (LPE) 系统学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-th"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Karma 渲染中的 Light Path Expressions (LPE) 系统学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-20T16:30:30.000Z" title="发表于 2026-01-21 00:30:30">2026-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-20T16:30:30.000Z" title="更新于 2026-01-21 00:30:30">2026-01-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Karma-渲染中的-Light-Path-Expressions-LPE-系统学习"><a href="#Karma-渲染中的-Light-Path-Expressions-LPE-系统学习" class="headerlink" title="Karma 渲染中的 Light Path Expressions (LPE) 系统学习"></a>Karma 渲染中的 Light Path Expressions (LPE) 系统学习</h2><h3 id="1-这是什么？"><a href="#1-这是什么？" class="headerlink" title="1. 这是什么？"></a>1. 这是什么？</h3><p>简单说，<strong>LPE（Light Path Expressions，光线路径表达式）</strong> 是一种<strong>声明式语法</strong>，让你能像写公式一样，精确指定你要渲染的“那部分光”。</p>
+<ul>
+<li><p><strong>为什么需要它？</strong> 默认渲染输出（比如 <code>C</code>，代表 Beauty）是所有光线路径贡献的总和。LPE 允许你“拆开”这个总和，<strong>单独提取</strong>特定类型的光线交互结果（例如：只显示直接漫反射光、只显示一次镜面反射后的焦散、只显示从玻璃物体出来的折射光等）。</p>
+</li>
+<li><p><strong>核心价值：</strong> 用于<strong>后期合成调色</strong>（AOVs）、<strong>诊断渲染问题</strong>（比如查看特定光源贡献）、以及创造<strong>特殊视觉效果</strong>。</p>
+</li>
+</ul>
+<h3 id="2-LPE-语法核心：路径模式匹配"><a href="#2-LPE-语法核心：路径模式匹配" class="headerlink" title="2. LPE 语法核心：路径模式匹配"></a>2. LPE 语法核心：路径模式匹配</h3><p>想象一束光从摄像机出发，在场景里弹跳，最后打到光源。LPE 就是描述这个“弹跳旅程”的规则。</p>
+<p><strong>基本令牌（Tokens）:</strong></p>
+<ul>
+<li><p><code>C</code>： 摄像机（起点）</p>
+</li>
+<li><p><code>L</code>： 光源（终点）</p>
+</li>
+<li><p><code>[ ... ]</code>： 匹配括号内任意一个事件</p>
+</li>
+<li><p><code>(...)</code>： 分组</p>
+</li>
+<li><p><code>*</code>： 匹配前面的事件零次或多次</p>
+</li>
+<li><p><code>+</code>： 匹配前面的事件一次或多次</p>
+</li>
+<li><p><code>|</code>： 或</p>
+</li>
+</ul>
+<p><strong>表面交互事件:</strong></p>
+<ul>
+<li><p><code>D</code>： 漫反射（Diffuse）交互</p>
+</li>
+<li><p><code>S</code>： 镜面反射（Specular）交互</p>
+</li>
+<li><p><code>G</code>： 光泽反射（Glossy）交互</p>
+</li>
+<li><p><code>T</code>： 透射&#x2F;折射（Transmission）</p>
+</li>
+<li><p><code>V</code>： 体积散射（Volume）交互</p>
+</li>
+<li><p><code>O</code>： 物体本身发射的光（自发光）</p>
+</li>
+<li><p><code>B</code>： 背景（Background）</p>
+</li>
+<li><p><code>R</code>： 反射（Reflection），是 <code>[SG]</code> 的简写</p>
+</li>
+<li><p><code>RR</code>： 纯镜面反射（Perfect Specular），是 <code>[S]</code> 的简写</p>
+</li>
+<li><p><code>TD</code>： 漫透射</p>
+</li>
+<li><p><code>TS</code>： 镜面透射（折射）</p>
+</li>
+</ul>
+<h3 id="3-常用表达式示例（从易到难）"><a href="#3-常用表达式示例（从易到难）" class="headerlink" title="3. 常用表达式示例（从易到难）"></a>3. 常用表达式示例（从易到难）</h3><p><strong>1. 基础分离:</strong></p>
+<ul>
+<li><p><code>C.*D.*L</code>： <strong>直接漫反射</strong>。光从摄像机出发，经过一次漫反射表面后直接到达光源。</p>
+</li>
+<li><p><code>C.*S.*L</code>： <strong>直接镜面反射</strong>。</p>
+</li>
+<li><p><code>C.*T.*L</code>： <strong>直接透射&#x2F;折射</strong>。</p>
+</li>
+</ul>
+<p><strong>2. 间接光照:</strong></p>
+<ul>
+<li><p><code>C.*D.*D.*L</code>： <strong>间接漫反射</strong>（一次弹跳）。路径中有两次漫反射交互。</p>
+</li>
+<li><p><code>C.*[DS].*L</code>： <strong>所有直接光照</strong>（漫反射或镜面反射）。</p>
+</li>
+</ul>
+<p><strong>3. 焦散（Caustics）:</strong></p>
+<ul>
+<li><p><code>C.*T.*S.*L</code>： <strong>折射焦散</strong>。光先折射穿过物体，再经镜面反射到达光源（例如：游泳池底的光斑）。</p>
+</li>
+<li><p><code>C.*S.*T.*L</code>： <strong>反射焦散</strong>。光先镜面反射，再折射（较少见）。</p>
+</li>
+</ul>
+<p><strong>4. 环境光&#x2F;背景:</strong></p>
+<ul>
+<li><p><code>C.*B</code>： <strong>纯背景</strong>。光线直接打到背景，没碰到任何场景物体。</p>
+</li>
+<li><p><code>C.*D.*B</code>： <strong>受场景物体影响后的背景</strong>（物体颜色“染色”了背景）。</p>
+</li>
+</ul>
+<p><strong>5. 自发光:</strong></p>
+<ul>
+<li><code>C.*O</code>： <strong>直接可见的自发光表面</strong>。</li>
+</ul>
+<h3 id="4-在-Houdini-Karma-中如何使用？"><a href="#4-在-Houdini-Karma-中如何使用？" class="headerlink" title="4. 在 Houdini &#x2F; Karma 中如何使用？"></a>4. 在 Houdini &#x2F; Karma 中如何使用？</h3><ol>
+<li><p><strong>创建 AOV：</strong> 在 Karma 渲染设置或 ROP 节点中，找到 AOV（Arbitrary Output Variables）设置页面。</p>
+</li>
+<li><p><strong>添加自定义 LPE AOV：</strong> 添加一个新的 AOV，将其 <strong>“数据名称”</strong> 设置为你的 LPE 表达式，例如 <code>C.*D.*L</code>。</p>
+</li>
+<li><p><strong>命名与输出：</strong> 给这个 AOV 起个易懂的名字（如 <code>direct_diffuse</code>），并指定输出格式和文件名。</p>
+</li>
+<li><p><strong>渲染与合成：</strong> 渲染后，你会在输出图像（如 EXR）的独立通道或图层中找到这个 LPE 的结果。在 Nuke 或 Fusion 等软件中调用这些通道进行合成。</p>
+</li>
+</ol>
+<h3 id="5-调试与验证技巧"><a href="#5-调试与验证技巧" class="headerlink" title="5. 调试与验证技巧"></a>5. 调试与验证技巧</h3><ul>
+<li><p><strong>从简单开始：</strong> 先用 <code>C.*D.*L</code> 和 <code>C.*S.*L</code> 验证你的设置是否正确。</p>
+</li>
+<li><p><strong>使用 Karma 的实时视图（IPR）：</strong> 在 IPR 中单独查看你定义的 LPE AOV，实时观察效果。</p>
+</li>
+<li><p><strong>组合使用：</strong> 一个复杂的视觉效果通常需要多个 LPE 通道叠加合成。</p>
+</li>
+<li><p><strong>注意能量守恒：</strong> 理论上，所有关键 LPE 通道加起来应该等于 Beauty 通道（<code>C.*L</code>）。可以用这个来检查是否漏了重要的光路。</p>
+</li>
+</ul>
+<h3 id="核心要点总结"><a href="#核心要点总结" class="headerlink" title="核心要点总结"></a>核心要点总结</h3><ul>
+<li><p><strong>LPE 是滤镜&#x2F;选择器</strong>，不是着色器。它决定<strong>算哪些光</strong>，不改变光如何与材质交互。</p>
+</li>
+<li><p><strong>表达式描述光路旅程</strong>： <code>C</code> (起点) -&gt; [表面事件] -&gt; <code>L</code> (终点)。</p>
+</li>
+<li><p><strong>威力在于后期</strong>： 渲染时分离，合成时拥有无限调整自由（单独调色、压暗、提亮特定光路）。</p>
+</li>
+<li><p><strong>多练是关键</strong>： 在一个简单场景（一个球、一个平面、一盏灯）里测试上面所有例子，亲眼看到每种表达式提取出了什么，这是最快的学习方法。</p>
+</li>
+</ul>
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://saxz2.github.io">SaXz2</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://saxz2.github.io/20260121003030/">https://saxz2.github.io/20260121003030/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://saxz2.github.io" target="_blank">我的博客</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/20260121003109/" title="【一站式Ai配置指南】Spec 驱动开发 + Gemini 本地反代 + MCP 配置全流程攻略"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【一站式Ai配置指南】Spec 驱动开发 + Gemini 本地反代 + MCP 配置全流程攻略</div></div><div class="info-2"><div class="info-item-1">【一站式Ai配置指南】Spec 驱动开发 + Gemini 本地反代 + MCP 配置全流程攻略 前置条件Google 账号 有Pro更好我买的时候 咸鱼20块钱 Codex Team 账号我买的时候 咸鱼8.8块钱 为啥用这个：它虽然很慢，但是查BUG，是目前效果最好的。 Claude Code 可以用自定义API 主要是为了使用 Opus 4.5用免费号池也可、用GLM4.6套餐首月 25块钱、方案比较多看自己选择 白嫖可以用 **Antigravity ** 但不一定能登录进去，可能需要买新号（6块）或者转区，有些费事，时间成本比较大 另外也可以在淘宝或者咸鱼搞其他的IDE 例：Kiro  自带范式开发也有 Opus 4.5  缺点是额度较少 六七块钱 550的额度，可能不够用 个人体验上一般，速度不如 Cursor 快 ， 但考虑到其极低的时间成本，所以值得一提 其他：Trae、Qoder、什么乱七八糟的IDE都可以去试试各有优劣，有些模型可以免费用，国内的都比较一般，当玩具就行，你也可以同时开多个IDE来开发，把他们各自的优点都发挥出来，利用Git来实现迭代和分支即可。...</div></div></div></a><a class="pagination-related" href="/hello-hexo/" title="欢迎使用 Hexo"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">欢迎使用 Hexo</div></div><div class="info-2"><div class="info-item-1">欢迎来到我的 Hexo 博客！ 关于 HexoHexo 是一个快速、简洁且高效的博客框架。 特点 快速生成静态页面 支持 Markdown 丰富的主题和插件  现在你可以用虎鲸笔记插件直接发布文章了！ </div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">SaXz2</div><div class="author-info-description">欢迎来到我的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/SaXz2"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SaXz2" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！🌸</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Karma-%E6%B8%B2%E6%9F%93%E4%B8%AD%E7%9A%84-Light-Path-Expressions-LPE-%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.</span> <span class="toc-text">Karma 渲染中的 Light Path Expressions (LPE) 系统学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BF%99%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 这是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-LPE-%E8%AF%AD%E6%B3%95%E6%A0%B8%E5%BF%83%EF%BC%9A%E8%B7%AF%E5%BE%84%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D"><span class="toc-number">1.2.</span> <span class="toc-text">2. LPE 语法核心：路径模式匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%B8%E7%94%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%A4%BA%E4%BE%8B%EF%BC%88%E4%BB%8E%E6%98%93%E5%88%B0%E9%9A%BE%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3. 常用表达式示例（从易到难）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%9C%A8-Houdini-Karma-%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%EF%BC%9F"><span class="toc-number">1.4.</span> <span class="toc-text">4. 在 Houdini &#x2F; Karma 中如何使用？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%B0%83%E8%AF%95%E4%B8%8E%E9%AA%8C%E8%AF%81%E6%8A%80%E5%B7%A7"><span class="toc-number">1.5.</span> <span class="toc-text">5. 调试与验证技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">核心要点总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121003109/" title="【一站式Ai配置指南】Spec 驱动开发 + Gemini 本地反代 + MCP 配置全流程攻略">【一站式Ai配置指南】Spec 驱动开发 + Gemini 本地反代 + MCP 配置全流程攻略</a><time datetime="2026-01-20T16:31:09.000Z" title="发表于 2026-01-21 00:31:09">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/20260121003030/" title="Karma 渲染中的 Light Path Expressions (LPE) 系统学习">Karma 渲染中的 Light Path Expressions (LPE) 系统学习</a><time datetime="2026-01-20T16:30:30.000Z" title="发表于 2026-01-21 00:30:30">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/hello-hexo/" title="欢迎使用 Hexo">欢迎使用 Hexo</a><time datetime="2026-01-20T16:00:00.000Z" title="发表于 2026-01-21 00:00:00">2026-01-21</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By SaXz2</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://your-waline-url.vercel.app',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client@3.8.0/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client@3.8.0/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !true) {
+    if (true) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@2.0.4/dist/canvas-nest.umd.js"></script><script>new CanvasNest(document.body,{color:'255,182,193',opacity:0.7,count:99,zIndex:-1});</script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/third-party/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
