@@ -1,22 +1,89 @@
-# 网站基本信息
+# Hexo Configuration
+# Docs: https://hexo.io/docs/configuration.html
+
+# Site
 title: 我的博客
-description: 用虎鲸笔记写博客
+subtitle: ''
+description: '用虎鲸笔记写博客'
+keywords:
 author: SaXz2
-url: https://SaXz2.github.io
-baseurl: ""
+language: zh-CN
+timezone: 'Asia/Shanghai'
 
-# Jekyll 设置
-markdown: kramdown
-permalink: /:title/
-timezone: Asia/Shanghai
+# URL
+url: https://saxz2.github.io
+permalink: :title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
 
-# 插件
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
 
-# 排除文件
+# Writing
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+highlight:
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# Home page setting
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Metadata elements
+meta_generator: true
+
+# Date / Time format
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+updated_option: 'mtime'
+
+# Pagination
+per_page: 10
+pagination_dir: page
+
+# Include / Exclude file(s)
+include:
 exclude:
-  - README.md
-  - Gemfile
-  - Gemfile.lock
+ignore:
+
+# Extensions
+theme: landscape
+
+# Deployment
+deploy:
+  type: ''
