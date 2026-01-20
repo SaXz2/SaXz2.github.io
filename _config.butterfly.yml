@@ -3,17 +3,19 @@
 
 # 导航栏
 menu:
-  首页: / || fas fa-home
-  归档: /archives/ || fas fa-archive
-  标签: /tags/ || fas fa-tags
-  分类: /categories/ || fas fa-th
-  相册: /gallery/ || fas fa-images
+  首頁: / || fas fa-home
+  歸檔: /archives/ || fas fa-archive
+  標籤: /tags/ || fas fa-tags
+  分類: /categories/ || fas fa-th
+  相冊: /gallery/ || fas fa-images
 
 # 代码块
-highlight_theme: mac
+highlight_theme: darker
 highlight_copy: true
 highlight_lang: true
 highlight_shrink: false
+
+code_word_wrap: true
 
 # 社交链接
 social:
@@ -25,10 +27,23 @@ avatar:
   effect: false
 
 # 顶部图
-index_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-archive_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-tag_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
-category_img: https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
+index_img: orange
+archive_img: orange
+tag_img: orange
+category_img: orange
+
+# 首页顶部图高度
+index_top_img_height: 400px
+
+# 主頁副標題
+subtitle:
+  enable: true
+  effect: true
+  typed_option:
+  source: false
+  sub:
+    - 今日事&#44;今日畢
+    - Never put off till tomorrow what you can do today
 
 # 封面
 cover:
@@ -37,7 +52,6 @@ cover:
   archives_enable: true
   position: both
   default_cover:
-    - https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
 
 # 文章元信息
 post_meta:
@@ -96,7 +110,7 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 欢迎来到我的博客
+    description: 歡迎來到我的博客
     button:
       enable: true
       icon: fab fa-github
@@ -104,7 +118,7 @@ aside:
       link: https://github.com/SaXz2
   card_announcement:
     enable: true
-    content: 欢迎来到我的博客！🌸
+    content: 歡迎來到我的博客！🌸
   card_recent_post:
     enable: true
     limit: 5
@@ -173,7 +187,7 @@ comments:
 
 # Waline 评论配置
 waline:
-  serverURL: https://your-waline-url.vercel.app # 需要部署 Waline 服务
+  serverURL: https://your-waline-url.vercel.app
   bg: /img/comment_bg.png
   pageview: true
   option:
