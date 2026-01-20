@@ -7,6 +7,7 @@ menu:
   归档: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-th
+  相册: /gallery/ || fas fa-images
 
 # 代码块
 highlight_theme: mac
@@ -164,10 +165,18 @@ local_search:
 
 # 评论
 comments:
-  use:
+  use: Waline
   text: true
-  lazyload: false
-  count: false
+  lazyload: true
+  count: true
+  card_post_count: true
+
+# Waline 评论配置
+waline:
+  serverURL: https://your-waline-url.vercel.app # 需要部署 Waline 服务
+  bg: /img/comment_bg.png
+  pageview: true
+  option:
 
 # 美化
 beautify:
@@ -193,9 +202,11 @@ theme_color:
   blockquote_background_color: '#49b1f5'
   scrollbar_color: '#49b1f5'
 
-# 注入代码（樱花特效）
+# 注入代码（粒子特效 + 鼠标跟随线条）
 inject:
   head:
-    - <style>.sakura{pointer-events:none;position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:9999}</style>
+    - <style>.canvas-nest{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}</style>
   bottom:
-    - <script>!function(){function e(){const e=document.createElement("div");e.className="sakura",e.style.left=100*Math.random()+"%",e.style.animationDuration=10+20*Math.random()+"s",e.style.animationDelay=5*Math.random()+"s",e.innerHTML='<svg viewBox="0 0 40 40" width="40" height="40"><path d="M20,2 Q25,10 20,18 Q15,10 20,2 M20,22 Q25,30 20,38 Q15,30 20,22 M2,20 Q10,15 18,20 Q10,25 2,20 M22,20 Q30,15 38,20 Q30,25 22,20" fill="pink" opacity="0.6"/></svg>',document.body.appendChild(e),setTimeout(()=>e.remove(),3e4)}setInterval(e,300)}();</script>
+    - <script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@2.0.4/dist/canvas-nest.umd.js"></script>
+    - <script>new CanvasNest(document.body,{color:'255,182,193',opacity:0.7,count:99,zIndex:-1});</script>
+    - <script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/third-party/canvas-fluttering-ribbon.min.js"></script>

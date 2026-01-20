@@ -87,3 +87,14 @@ theme: butterfly
 # Deployment
 deploy:
   type: ''
+
+
+# 文章加密插件
+encrypt:
+  silent: false
+  enable: true
+  default_abstract: 🔒 这是一篇加密文章，需要密码才能查看
+  default_message: 请输入密码查看内容
+  default_template:
+  wrong_pass_message: 密码错误，请重试
+  wrong_hash_message: 文章不能被校验，请联系作者
