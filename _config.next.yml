@@ -9,7 +9,7 @@ menu:
   home: / || fa fa-home
   archives: /archives/ || fa fa-archive
   tags: /tags/ || fa fa-tags
-  #categories: /categories/ || fa fa-th
+  categories: /categories/ || fa fa-th
   #about: /about/ || fa fa-user
 
 # 侧边栏
