@@ -79,6 +79,7 @@ pagination_dir: page
 # Include / Exclude file(s)
 include:
 exclude:
+  - .last-build-commit
 ignore:
 
 # Extensions
@@ -86,7 +87,10 @@ theme: butterfly
 
 # Deployment
 deploy:
-  type: ''
+  type: git
+  repo: git@ssh.github.com:443/SaXz2/SaXz2.github.io.git
+  branch: gh-pages
+  message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
 
 
 # 文章加密插件
